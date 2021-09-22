@@ -6,27 +6,57 @@ namespace RPGShop
 {
     class Shop
     {
+        //Private vars
         private int _gold;
-        private Item[] item;
+        private Item[] _item;
 
-        public Item[] inventory
+        /// <summary>
+        /// Sets the inventory for the shop so the player is able to buy
+        /// RENAMED THE FUNCTION BECAUSE THE ORIGINAL NAME WAS UNCLEAR
+        /// </summary>
+        /// <param name="ForSale"></param>
+        public void shopItemsAvailable(Item[] ForSale)
         {
-            get { return item; }
+            _item = new Item[ForSale.Length];
+
+            for (int i = 0; i < ForSale.Length; i++)
+            {
+                _item[i] = ForSale[i];
+            }
         }
 
-        public void shop(Item[] ForSale)
+        /// <summary>
+        /// Checks if the item can be sold to the player
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="SellPrice"></param>
+        /// <returns></returns>
+        public bool SellItem(Player player, int SellPrice)
         {
-            
+            if (player.Gold < SellPrice)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
-        public bool SellItem(Player player, int money)
-        { 
 
-        }
-
+        /// <summary>
+        /// Gets Item names from the shops inventory
+        /// </summary>
+        /// <returns></returns>
         public string[] GetItemNames()
-        { 
+        {
+            string[] ItemNames = new string[_item.Length];
+            for (int i = 0; i < _item.Length; i++)
+            {
+                ItemNames[i] = _item[i].itemName;
+            }
 
+            return ItemNames;
         }
 
     }
