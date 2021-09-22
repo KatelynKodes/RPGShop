@@ -26,6 +26,7 @@ namespace RPGShop
             {
                 Update();
             }
+            End();
         }
 
         void Start()
