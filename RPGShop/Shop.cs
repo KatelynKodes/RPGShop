@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+
 
 namespace RPGShop
 {
@@ -31,10 +33,11 @@ namespace RPGShop
         /// <param name="player"></param>
         /// <param name="SellPrice"></param>
         /// <returns></returns>
-        public bool SellItem(Player player, int SellPrice)
+        public bool SellItem(Player player, int ItemIndex)
         {
-            if (player.Gold < SellPrice)
+            if (player.Gold < _item[ItemIndex].Cost)
             {
+                player.Buy(_item[ItemIndex]);
                 return false;
             }
             else

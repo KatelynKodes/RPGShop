@@ -22,7 +22,8 @@ namespace RPGShop
         /// </summary>
         public Player()
         {
-            
+            _gold = 100;
+            _inventory = new Item[0];
         }
 
         /// <summary>
@@ -30,15 +31,40 @@ namespace RPGShop
         /// </summary>
         /// <param name="writer"></param>
         public void Save(StreamWriter writer)
-        { 
-
+        {
+            writer.WriteLine(_gold);
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                writer.WriteLine(_inventory[i].itemName);
+                writer.WriteLine(_inventory[i].Cost);
+            }
         }
 
         /// <summary>
         /// Loads the player's gold and inventory items
         /// </summary>
         /// <param name="reader"></param>
-        //public bool Load(StreamReader reader)
+        public bool Load(StreamReader reader)
+        {
+            if (!int.TryParse(reader.ReadLine(), out _gold))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                if (reader.ReadLine() != _inventory[i].itemName)
+                {
+                    return false;
+                }
+                if (!int.TryParse(reader.ReadLine(), out _inventory[i].Cost))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public void Buy(Item ItemToBuy)
         {
