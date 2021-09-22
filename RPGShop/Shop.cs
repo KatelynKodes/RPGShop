@@ -35,13 +35,13 @@ namespace RPGShop
         /// <returns></returns>
         public bool SellItem(Player player, int ItemIndex)
         {
-            if (player.Gold < _item[ItemIndex].Cost)
+            if (player.Gold < _item[ItemIndex-1].Cost)
             {
-                player.Buy(_item[ItemIndex]);
                 return false;
             }
             else
             {
+                player.Buy(_item[ItemIndex-1]);
                 return true;
             }
         }

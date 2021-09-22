@@ -10,6 +10,7 @@ namespace RPGShop
         //Private Variable
         private int _gold;
         private Item[] _inventory;
+        private int _inventoryLength;
 
         //Properties
         public int Gold
@@ -33,6 +34,7 @@ namespace RPGShop
         public void Save(StreamWriter writer)
         {
             writer.WriteLine(_gold);
+            writer.WriteLine(_inventoryLength);
             for (int i = 0; i < _inventory.Length; i++)
             {
                 writer.WriteLine(_inventory[i].itemName);
@@ -51,7 +53,12 @@ namespace RPGShop
                 return false;
             }
 
-            for (int i = 0; i < _inventory.Length; i++)
+            if (!int.TryParse(reader.ReadLine(), out _inventoryLength))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < _inventoryLength; i++)
             {
                 if (reader.ReadLine() != _inventory[i].itemName)
                 {
@@ -62,12 +69,13 @@ namespace RPGShop
                     return false;
                 }
             }
-
+             
             return true;
         }
 
         public void Buy(Item ItemToBuy)
         {
+            _gold -= ItemToBuy.Cost;
             Item[] NewInventory = new Item[_inventory.Length+1];
             for (int i = 0; i < _inventory.Length; i++)
             {
@@ -77,6 +85,7 @@ namespace RPGShop
 
             NewInventory[NewInventory.Length - 1] = ItemToBuy;
             _inventory = NewInventory;
+            _inventoryLength = _inventory.Length;
         }
 
 

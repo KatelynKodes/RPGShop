@@ -51,6 +51,7 @@ namespace RPGShop
             StreamWriter writer = new StreamWriter("SaveData.txt");
             _player.Save(writer);
             writer.WriteLine(_currentscene);
+            writer.Close();
         }
 
         bool Load()
@@ -69,7 +70,7 @@ namespace RPGShop
             }
 
             Reader.Close();
-            return LoadSuccessful = true;
+            return LoadSuccessful;
         }
 
         void InitializeItems()
@@ -190,13 +191,38 @@ namespace RPGShop
             // Displays shop menu 
             Console.Clear();
             string[] MenuOptions = GetShopMenuOptions(_shop.GetItemNames());
+            Console.WriteLine("PLAYER GOLD: " + _player.Gold);
+            Console.WriteLine("");
             int DisplayShop = GetInput("What would you like to purchase?", MenuOptions);
 
             //Checks which option the player choses
-            if (DisplayShop != (MenuOptions.Length - 2 + 1) || DisplayShop != (MenuOptions.Length - 1 + 1))
+            if (DisplayShop == (MenuOptions.Length - 2 + 1) || DisplayShop == (MenuOptions.Length - 1 + 1))
+            {
+                if (DisplayShop == MenuOptions.Length - 2 + 1)
+                {
+                    Console.WriteLine("Saving your progress");
+                    Save();
+                    Console.WriteLine("Progress Saved");
+                    Console.ReadKey(true);
+                }
+                else if (DisplayShop == MenuOptions.Length - 1 + 1)
+                {
+                    if (Load())
+                    {
+                        Console.WriteLine("Load Successful");
+                        Console.ReadKey(true);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Load Unsuccessful");
+                        Console.ReadKey(true);
+                    }
+                }
+            }
+            else
             {
                 //Confirmation
-                int BuyItem = GetInput("Would you like to buy " + MenuOptions[DisplayShop-1] + "?", "Yes", "No");
+                int BuyItem = GetInput("Would you like to buy " + MenuOptions[DisplayShop - 1] + "?", "Yes", "No");
                 if (BuyItem == 1)
                 {
                     if (_shop.SellItem(_player, DisplayShop))
@@ -208,32 +234,13 @@ namespace RPGShop
                     else
                     {
                         //Player Cannot buy
-                        Console.WriteLine("You cannot buy " + MenuOptions[DisplayShop-1]+ ".");
+                        Console.WriteLine("You cannot buy " + MenuOptions[DisplayShop - 1] + ".");
                         Console.ReadKey(true);
                     }
                 }
                 else if (BuyItem == 2)
                 {
                     return;
-                }
-            }
-            else
-            {
-                if (DisplayShop == MenuOptions.Length - 2 + 1)
-                {
-                    Console.WriteLine("Saving your progress");
-                    Save();
-                }
-                else if (DisplayShop == MenuOptions.Length - 1 + 1)
-                {
-                    if (Load())
-                    {
-                        Console.WriteLine("Load Successful");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Load Unsuccessful");
-                    }
                 }
             }
         }
